@@ -72,17 +72,17 @@ export const getById = async(id)=>{
 export const update = async(id,{ firstname, surname, email })=>{
      const numId = Number(id);
 
-    // 1. Validação de ID
+    
     if (!Number.isInteger(numId) || numId <= 0) {
         return { status: 400, body: { message: "Invalid ID" } };
     }
 
-    // 2. Verifica se ao menos um campo foi enviado
+    
     if (!firstname && !surname && !email) {
         return { status: 400, body: { message: "At least one field must be provided" } };
     }
 
-    // 3. Validações de tamanho de nome
+    
     if (firstname && firstname.trim().length < 2) {
         return { status: 400, body: { message: "First name must be at least 2 characters" } };
     }
@@ -90,49 +90,49 @@ export const update = async(id,{ firstname, surname, email })=>{
         return { status: 400, body: { message: "Surname must be at least 2 characters" } };
     }
 
-    // 4. Validação de E-mail e Unicidade
+    
     if (email) {
         if (!validator.isEmail(email)) {
             return { status: 400, body: { message: 'invalid email format' } };
         }
 
         const existingUser = await User.findOne({ where: { email: email.toLowerCase().trim() } });
-        // Verifica se o email já existe em outro usuário (ID diferente)
+        
         if (existingUser && existingUser.id !== numId) {
             return { status: 409, body: { message: "Email already exists" } };
         }
     }
 
-    // 5. Preparação dos dados para o banco
+    
     const updateData = {};
     if (firstname) updateData.firstname = firstname.trim();
     if (surname) updateData.surname = surname.trim();
     if (email) updateData.email = email.toLowerCase().trim();
 
-    // 6. Execução do Update no Banco
+    
     const [rowsUpdated] = await User.update(updateData, { where: { id: numId } });
 
     if (!rowsUpdated) {
         return { status: 404, body: { message: `User with id ${id} not found` } };
     }
 
-    // Retorno de sucesso (204 No Content é padrão para updates bem-sucedidos sem retorno de objeto)
+    
     return { status: 204, body: null };
 }
 export const remove = async(id)=>{
     const numId = Number(id);
 
-    // 1. Validação de ID (mesma lógica do getById)
+    
     if (!Number.isInteger(numId) || numId <= 0) {
         return { status: 400, body: { message: "Invalid ID" } };
     }
 
-    // 2. Executa a remoção
+    
     const deleted = await User.destroy({
         where: { id: numId }
     });
 
-    // 3. Verifica se algo foi realmente apagado
+    
     if (!deleted) {
         return { 
             status: 404, 
@@ -140,7 +140,7 @@ export const remove = async(id)=>{
         };
     }
 
-    // Sucesso na remoção
+    
     return { status: 204, body: null };
 
 }

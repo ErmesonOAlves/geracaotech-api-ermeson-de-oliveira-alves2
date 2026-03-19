@@ -31,7 +31,7 @@ export const search = async (query) => {
         distinct: true,
         attributes: { exclude: ['createdAt', 'updatedAt', 'use_in_menu'] }
     };
-    //pagination
+    
     if (limit !== -1) {
         queryOptions.limit = limit;
         queryOptions.offset = (page - 1) * limit;
@@ -49,20 +49,20 @@ export const search = async (query) => {
         ];
     }
 
-    // Filtro de Preço
+    
     if (priceRange) {
         const [min, max] = priceRange.split('-').map(Number);
         where.price = { [Op.between]: [min, max] };
     }
 
-    // Filtro de Categorias
+    
     if (category_ids) {
         const ids = category_ids.split(',');
         const catInclude = include.find(i => i.as === 'category');
         catInclude.where = { id: { [Op.in]: ids } };
     }
 
-    // Filtro de Opções Dinâmicas (ex: option[Cor]=Preto)
+    
     Object.keys(optionsFilters).forEach(key => {
         if (key.startsWith('option[')) {
             const values = optionsFilters[key].split(',');
@@ -118,15 +118,15 @@ export const create = async (productData) => {
             const imagesToCreate = images.map(img => ({
                 product_id: product.id,
                 enabled: true,
-                path: img.content // Recebe o conteúdo base64 enviado pelo front
+                path: img.content 
             }));
             await ProductImages.bulkCreate(imagesToCreate, { transaction: t });
         }
 
-        // 4. Criar Opções (Tamanho, Cor, etc.)
+        
         if (options?.length > 0) {
             const optionsToCreate = options.map(opt => {
-                // Limpeza do valor radius (caso venha como "4px", vira 4)
+                
                 const radiusValue = typeof opt.radius === 'string'
                     ? parseInt(opt.radius.replace(/\D/g, ''))
                     : opt.radius;
@@ -138,14 +138,14 @@ export const create = async (productData) => {
                     shape: opt.shape,
                     radius: radiusValue || 0,
                     type: opt.type,
-                    // Converte array ["P", "M"] em string "P,M" para o banco
+                    
                     values: Array.isArray(rawValues) ? rawValues.join(',') : rawValues
                 };
             });
             await ProductOptions.bulkCreate(optionsToCreate, { transaction: t });
         }
 
-        // Se chegamos aqui sem erros, confirmamos as alterações no banco
+        
         await t.commit();
 
         return {
@@ -208,7 +208,7 @@ export const getById = async (id) => {
         description: p.description,
         price: p.price,
         price_with_discount: p.price_with_discount,
-        category_ids: categoryIds, // Inserido aqui para mudar a posição no JSON
+        category_ids: categoryIds, 
         images: p.images,
         options: p.options
     };
@@ -240,10 +240,10 @@ export const update = async (id, productData) => {
         if (images?.length > 0) {
             for (const img of images) {
                 if (img.id && img.deleted) {
-                    // Remove se tiver ID e estiver marcada para deletar
+                    
                     await ProductImages.destroy({ where: { id: img.id }, transaction: t });
                 } else if (!img.id) {
-                    // Cria se não tiver ID (é uma imagem nova)
+                    
                     await ProductImages.create({
                         product_id: id,
                         enabled: true,
@@ -255,7 +255,7 @@ export const update = async (id, productData) => {
         if (options?.length > 0) {
             for (const opt of options) {
                 if (opt.id && opt.deleted) {
-                    // Remove opção
+                    
                     await ProductOptions.destroy({ where: { id: opt.id }, transaction: t });
                 } else {
                     const radiusValue = typeof opt.radius === 'string'
@@ -272,13 +272,13 @@ export const update = async (id, productData) => {
                     };
 
                     if (opt.id) {
-                        // Atualiza opção existente
+                        
                         await ProductOptions.update(optionData, {
                             where: { id: opt.id },
                             transaction: t
                         });
                     } else {
-                        // Cria nova opção vinculada ao produto
+                        
                         await ProductOptions.create({
                             ...optionData,
                             product_id: id
