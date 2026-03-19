@@ -84,7 +84,7 @@ export const remove = async (req, res) => {
 
 export const login = async (req, res) => {
     try {
-        console.log("BODY RECEBIDO NO CONTROLLER:", req.body); 
+         
         const { email, password } = req.body
         if (!email || !password) {
             return res.status(400).json({

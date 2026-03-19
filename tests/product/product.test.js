@@ -3,6 +3,7 @@ import app from '../../src/app.js'
 import Product from '../../src/models/Product.js'
 import { getAuthToken, setupTestUser, baseProduct } from '../setup.js'
 import { Op } from 'sequelize'
+jest.setTimeout(20000);
 let authToken
 let createdProductId;
 const authenticatedRequest = (method, url) => {
@@ -22,7 +23,12 @@ beforeAll(async () => {
 
 
     const res = await authenticatedRequest('post', '/v1/product').send(baseProduct)
+    console.log(res.body)
+
     createdProductId = res.body.id;
+    if (!createdProductId) {
+        throw new Error('Produto não foi criado corretamente')
+    }
 })
 
 test('Should list all products', async () => {

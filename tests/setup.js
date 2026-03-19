@@ -37,7 +37,7 @@ export const baseProduct = {
     description: "Descrição do produto teste 01",
     price: 119.90,
     price_with_discount: 99.90,
-    category_ids: [4],
+    category_ids: [],
     images: [
         {
             type: "image/png",

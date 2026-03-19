@@ -119,7 +119,7 @@ test('Should fail when creating a user with an existing email', async () => {
     const res = await request(app).post('/v1/user').send({
         firstname: 'Garapaxxxxasdasd',
         surname: 'Da silvaxxxa',
-        email: 'lucas.mendes@email.com',
+        email: 'teste@ermeson.com',
         password: '123456789',
         confirmpassword: '123456789'
     })
@@ -145,15 +145,15 @@ test('Should fail when trying to update an invalid user', async () => {
 })
 test('Should delete a user', async () => {
     const uniqueEmail = faker.internet.email()
-    await request(app).post('/v1/user').send({
+    const createUser = await request(app).post('/v1/user').send({
         firstname: 'Delete',
         surname: 'User',
         email: uniqueEmail,
         password: '123456789',
         confirmpassword: '123456789'
     })
-    const userToRemove = await User.findOne({ where: { email: uniqueEmail } })
-    const tempId = userToRemove.id
+    expect(createUser.status).toBe(201);
+    const tempId = createUser.body.id;
     const res = await authenticatedRequest('delete', `/v1/user/${tempId}`)
     expect(res.status).toBe(204)
     const checkDeletedUserNotExists = await authenticatedRequest('get', `/v1/user/${tempId}`)

@@ -67,9 +67,24 @@ export const update = async (req, res) => {
      const t = await sequelize.transaction();
     try {
         const { id } = req.params;
-        
-       
+        if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
+            return res.status(400).json({ message: "Invalid ID" });
+        }
+       const existing = await ProductService.getById(id);
+
+        if (existing.status === 404) {
+            return res.status(404).json(existing.body);
+        }
+        if (existing.status === 400) {
+            return res.status(400).json(existing.body);
+        }
+        if (existing.status === 400) {
+            return res.status(400).json(existing.body);
+        }
         const {status,body} = await ProductService.update(id, req.body)
+        if(status===204){
+            return res.status(204).send();
+        }
         return res.status(status).json(body)
     } catch (error) {
         return res.status(400).json({ 
