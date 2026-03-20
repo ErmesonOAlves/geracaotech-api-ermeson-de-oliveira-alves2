@@ -118,7 +118,7 @@ export const create = async (productData) => {
             const imagesToCreate = images.map(img => ({
                 product_id: product.id,
                 enabled: true,
-                path: img.content 
+                path: img.path 
             }));
             await ProductImages.bulkCreate(imagesToCreate, { transaction: t });
         }
@@ -247,7 +247,7 @@ export const update = async (id, productData) => {
                     await ProductImages.create({
                         product_id: id,
                         enabled: true,
-                        path: img.content
+                        path: img.path
                     }, { transaction: t });
                 }
             }
