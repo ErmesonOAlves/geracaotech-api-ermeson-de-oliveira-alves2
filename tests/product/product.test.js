@@ -3,7 +3,7 @@ import app from '../../src/app.js'
 import Product from '../../src/models/Product.js'
 import { getAuthToken, setupTestUser, baseProduct } from '../setup.js'
 import { Op } from 'sequelize'
-jest.setTimeout(20000);
+// jest.setTimeout(20000);
 let authToken
 let createdProductId;
 const authenticatedRequest = (method, url) => {

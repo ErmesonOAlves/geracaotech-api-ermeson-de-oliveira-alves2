@@ -379,8 +379,26 @@
           { id: 'description', label: 'Descrição', type: 'text', placeholder: 'Notebook para jogos' },
           { id: 'enabled', label: 'Habilitado (true/false)', type: 'text', placeholder: 'true' },
           { id: 'category_ids', label: 'IDs de Categorias (ex: 1,2)', type: 'text', placeholder: '1' },
-          { id: 'images', label: 'Imagens (JSON)', type: 'textarea', placeholder: '[{"content":"https://exemplo.com/img.jpg"}]' },
-          { id: 'options', label: 'Opções (JSON)', type: 'textarea', placeholder: '[{"title":"Cor","shape":"square","radius":0,"type":"text","values":["Preto"]}]' }
+          {
+            id: 'images', label: 'Imagens (JSON)', type: 'textarea', placeholder: `exemplo de como inserir
+            [
+  {
+    "path": "https://exemplo.com",
+    "enabled": true
+  }
+]`
+          },
+          {
+            id: 'options', label: 'Opções (JSON)', type: 'textarea', placeholder: `exemplo de como inserir
+            [
+  {
+    "title": "Cor",
+    "shape": "square",
+    "radius": 0,
+    "type": "text",
+    "values": ["Preto"]
+  }
+]` }
         ],
         action: (f, base) => {
           const body = {
@@ -463,17 +481,32 @@
 
       const fieldsHtml = cfg.fields.map(f => {
         const el = f.type === 'textarea'
-          ? `<textarea id="f-${f.id}" placeholder="${f.placeholder}"></textarea>`
+          ? `<textarea id="f-${f.id}"></textarea>`
           : `<input id="f-${f.id}" type="${f.type}" placeholder="${f.placeholder}">`;
         return `<label>${f.label}</label>${el}`;
       }).join('');
 
       panel.innerHTML = `
+      
     <h3>${cfg.title}</h3>
     ${fieldsHtml}
     <button class="btn ${cfg.danger ? 'danger' : ''}" onclick="submit('${key}')">Enviar</button>
     <p class="hint" style="margin-top:8px;">🔒 = requer token JWT</p>
   `;
+      cfg.fields.forEach(f => {
+        const el = document.getElementById(`f-${f.id}`);
+        if (el && f.placeholder) {
+          if (el.tagName === 'TEXTAREA') {
+            el.value = f.placeholder;
+
+            el.addEventListener('focus', () => {
+              if (el.value === f.placeholder) {
+                el.value = '';
+              }
+            });
+          }
+        }
+      });
     }
 
     async function submit(key) {

@@ -26,7 +26,7 @@ export const create = async({ firstname, surname, email, password, confirmpasswo
                 }
             }
         }
-        if (!firstname || !surname || firstname.trim().length < 2 || surname.trim().length < 2) {
+        if (!firstname || !surname || firstname.trim().length < 4 || surname.trim().length < 4) {
                 return { 
                     status: 400, 
                     body: { message: "First name and surname must be at least 2 characters" } 

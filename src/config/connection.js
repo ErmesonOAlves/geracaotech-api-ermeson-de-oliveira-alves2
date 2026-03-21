@@ -1,8 +1,21 @@
 import 'dotenv/config';
 import { Sequelize } from 'sequelize';
 
-
-const sequelize = process.env.DATABASE_URL 
+const env = process.env.NODE_ENV || 'development';
+let sequelize;
+if (env==='test') {
+  sequelize = new Sequelize('db_test', 'user_test', 'password_test', {
+    host: 'localhost',
+    port: 5433, 
+    dialect: 'postgres',
+    logging: false,
+    define: {
+      timestamps: true,
+      underscored: true
+    }
+  });
+} else {
+   sequelize = process.env.DATABASE_URL 
   ? new Sequelize(process.env.DATABASE_URL, {
       dialect: 'postgres',
       dialectOptions: {
@@ -19,4 +32,5 @@ const sequelize = process.env.DATABASE_URL
       dialect: 'mysql'
     });
 
+}
 export default sequelize;

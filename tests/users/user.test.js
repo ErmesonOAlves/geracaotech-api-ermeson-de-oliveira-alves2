@@ -119,7 +119,7 @@ test('Should fail when creating a user with an existing email', async () => {
     const res = await request(app).post('/v1/user').send({
         firstname: 'Garapaxxxxasdasd',
         surname: 'Da silvaxxxa',
-        email: 'teste@ermeson.com',
+        email: 'test@test.com',
         password: '123456789',
         confirmpassword: '123456789'
     })

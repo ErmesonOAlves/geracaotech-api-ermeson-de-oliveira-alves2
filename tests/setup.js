@@ -1,7 +1,12 @@
 import request from 'supertest'
 import app from '../src/app.js'
 import User from '../src/models/User.js'
-
+import sequelize from '../src/config/connection.js'
+beforeAll(async () => {
+  
+    await sequelize.sync({ alter: true }); 
+    console.log("Banco de dados sincronizado!");
+});
 export const setupTestUser = async () => {
     const testUser = {
         email: 'test@test.com',
@@ -41,15 +46,15 @@ export const baseProduct = {
     images: [
         {
             type: "image/png",
-            content: "base64 da imagem 1"
+            path: "base64 da imagem 1"
         },
         {
             type: "image/png",
-            content: "base64 da imagem 2"
+            path: "base64 da imagem 2"
         },
         {
             type: "image/jpg",
-            content: "base64 da imagem 3"
+            path: "base64 da imagem 3"
         }
     ],
     options: [

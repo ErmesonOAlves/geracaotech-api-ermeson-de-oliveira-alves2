@@ -3,7 +3,7 @@ import app from '../../src/app.js'
 import Category from '../../src/models/Category.js'
 import { Op } from 'sequelize'
 import { getAuthToken, setupTestUser } from '../setup.js'
-jest.setTimeout(20000);
+// jest.setTimeout(20000);
 let authToken
 let createdCategoryId
 const authenticatedRequest = (method, url) => {
