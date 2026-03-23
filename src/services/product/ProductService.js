@@ -112,6 +112,19 @@ export const create = async (productData) => {
         }, { transaction: t });
 
         if (category_ids?.length > 0) {
+            const existingCategories = await Category.findAll({
+                where: { id: { [Op.in]: category_ids } },
+                attributes: ['id']
+            });
+            const foundIds = existingCategories.map(c=>c.id);
+            const notFound = category_ids.filter(id=>!foundIds.includes(id))
+            if(notFound.length >0){
+                await t.rollback();
+                return {
+                    status: 400,
+                    body: { message: "Category not found", categories: notFound }
+                }
+            }
             await product.setCategory(category_ids, { transaction: t })
         }
         if (images?.length > 0) {
@@ -235,6 +248,19 @@ export const update = async (id, productData) => {
         }, { transaction: t });
 
         if (category_ids) {
+            const existingCategories = await Category.findAll({
+                where: { id: { [Op.in]: category_ids } },
+                attributes: ['id']
+            })
+            const foundIds = existingCategories.map(c=>c.id);
+            const notFound = category_ids.filter(id=>!foundIds.includes(id))
+            if(notFound.length > 0){
+                await t.rollback();
+                return {
+                    status: 400,
+                    body: { message: "Category not found", categories: notFound }
+                }
+            }
             await product.setCategory(category_ids, { transaction: t })
         }
         if (images?.length > 0) {

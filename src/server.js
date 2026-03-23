@@ -12,7 +12,7 @@ async function startServer() {
         console.log('✅ Todas as tabelas foram sincronizadas no Neon!');
         
         app.listen(PORT, () => {
-            console.log(`Server running on ${PORT}`);
+            console.log(`Server running on localhost:\\${PORT}`);
         });
     } catch (err) {
         console.error('❌ Erro ao sincronizar banco:', err);

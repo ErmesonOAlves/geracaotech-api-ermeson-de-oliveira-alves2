@@ -51,3 +51,5 @@ test('Should fail with an invalid email format',async()=>{
     expect(res.status).toBe(400)
     expect(res.body.message).toContain('email format')
 })
+
+

@@ -4,10 +4,11 @@ import { Sequelize } from 'sequelize';
 const env = process.env.NODE_ENV || 'development';
 let sequelize;
 if (env==='test') {
-  sequelize = new Sequelize('db_test', 'user_test', 'password_test', {
-    host: 'localhost',
-    port: 5433, 
+  sequelize = new Sequelize(process.env.DATABASE_URL_TEST, {
     dialect: 'postgres',
+    dialectOptions: {
+      ssl: { require: true, rejectUnauthorized: false }
+    },
     logging: false,
     define: {
       timestamps: true,

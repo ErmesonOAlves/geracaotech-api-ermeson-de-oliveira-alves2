@@ -1,73 +1,312 @@
-# 🛒 Geração Tech E-commerce API
+# Geração Tech E-commerce API
 
-API RESTful para gerenciamento de e-commerce (Usuários, Produtos, Categorias) com autenticação JWT e documentação interativa.
-
----
-
-## 🚀 Tecnologias
-- **Node.js** | **Express** | **Sequelize (MySQL)**
-- **JWT** (Autenticação) | **Argon2** (Hash de senhas)
-- **Jest** & **Supertest** (Testes automatizados)
+API RESTful para gerenciamento de plataforma de e-commerce com gerenciamento completo de usuários, produtos e categorias.
 
 ---
 
-## 📖 Documentação da API (Swagger)
-Esta API utiliza **Swagger** para documentação interativa. Você pode explorar e testar todos os endpoints diretamente pelo navegador.
+## Sumário
 
-- **URL de Documentação:** `http://localhost:3099/api-docs`
+- [Recursos](#recursos)
+- [Tecnologias](#tecnologias)
+- [Documentação da API](#documentação-da-api)
+- [Pré-requisitos](#pré-requisitos)
+- [Instalação](#instalação)
+- [Configuração](#configuração)
+- [Executando o Projeto](#executando-o-projeto)
+- [Endpoints da API](#endpoints-da-api)
+- [Autenticação](#autenticação)
+- [Esquemas](#esquemas)
+- [Testes](#testes)
+- [Segurança](#segurança)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Licença](#licença)
 
 ---
 
-## ⚙️ Instalação e Execução
+## Recursos
 
-### 1. Preparação
+- **Gerenciamento de Usuários**: Criação, atualização, exclusão e busca de usuários com paginação
+- **Gerenciamento de Categorias**: CRUD completo de categorias de produtos
+- **Gerenciamento de Produtos**: CRUD completo de produtos com suporte a múltiplas imagens e opções
+- **Autenticação JWT**: Sistema de autenticação seguro com tokens de acesso
+- **Documentação Interativa**: Swagger UI para exploração e teste dos endpoints
+- **Testes Automatizados**: Suite de testes unitários e de integração com Jest
+- **Banco de Dados**: MySQL com ORM Sequelize e transações para integridade de dados
+
+---
+
+## Tecnologias
+
+| Categoria | Tecnologia |
+|-----------|------------|
+| Runtime | Node.js |
+| Framework | Express.js |
+| Banco de Dados | MySQL |
+| ORM | Sequelize |
+| Autenticação | JWT (JSON Web Tokens) |
+| Hash de Senhas | Argon2 |
+| Documentação | Swagger (OpenAPI 3.0) |
+| Testes | Jest + Supertest |
+| Validação | Custom Middlewares |
+
+---
+
+## Documentação da API
+
+A documentação completa e interativa está disponível através do Swagger UI.
+
+**URL**: `http://localhost:3099/api-docs`
+
+Através do Swagger você pode:
+- Visualizar todos os endpoints disponíveis
+- Testar cada endpoint diretamente no navegador
+- Ver os esquemas de requisição e resposta
+- Verificar códigos de erro e suas descrições
+
+---
+
+## Pré-requisitos
+
+- Node.js (v18+)
+- MySQL (v8.0+)
+- npm ou yarn
+
+---
+
+## Instalação
+
 ```bash
+# Clonar o repositório
 git clone <url-do-repositorio>
+
+# Instalar dependências
 npm install
-cp .env.example .env # Configure suas chaves no .env
 ```
 
-### 2. Banco de Dados
-Sincronize as tabelas com o script do Sequelize:
+---
+
+## Configuração
+
+Copie o arquivo de exemplo e configure as variáveis de ambiente:
+
+```bash
+cp .env.example .env
+```
+
+Configure as seguintes variáveis no arquivo `.env`:
+
+| Variável | Descrição |
+|----------|------------|
+| `PORT` | Porta do servidor (padrão: 3099) |
+| `DB_HOST` | Host do banco de dados |
+| `DB_USER` | Usuário do banco de dados |
+| `DB_PASS` | Senha do banco de dados |
+| `DB_NAME` | Nome do banco de dados |
+| `JWT_SECRET` | Chave secreta para tokens JWT |
+| `JWT_EXPIRES_IN` | Tempo de expiração do token |
+
+---
+
+## Executando o Projeto
+
+### Sincronizar Banco de Dados
+
 ```bash
 npm run db:sync
 ```
 
-### 3. Rodar a Aplicação
+### Desenvolvimento (Hot Reload)
+
 ```bash
-npm run dev # Modo desenvolvimento (hot reload)
+npm run dev
+```
+
+### Produção
+
+```bash
+npm start
 ```
 
 ---
 
-## 📡 Endpoints Principais
+## Endpoints da API
 
-| Recurso | Método | Endpoint | Protegido |
-| :--- | :--- | :--- | :--- |
-| **Auth** | POST | `/v1/user/token` | ❌ |
-| **Users** | GET/POST | `/v1/user`, `/v1/user/search`, `/v1/user/:id` | 🔒 (PUT/DEL) |
-| **Categories** | ALL | `/v1/category`, `/v1/category/:id` | 🔒 (C/U/D) |
-| **Products** | ALL | `/v1/product`, `/v1/product/search`, `/v1/product/:id` | 🔒 (C/U/D) |
+### Auth
 
-> Para mais detalhes sobre payloads e respostas, acesse o **Swagger UI**.
+| Método | Endpoint | Descrição | Autenticado |
+|--------|----------|-----------|-------------|
+| POST | `/v1/user/token` | Gera token JWT para autenticação | Não |
+
+### Usuários
+
+| Método | Endpoint | Descrição | Autenticado |
+|--------|----------|-----------|-------------|
+| GET | `/v1/user/search` | Lista usuários com paginação | Não |
+| GET | `/v1/user/:id` | Busca usuário por ID | Não |
+| POST | `/v1/user` | Cria novo usuário | Não |
+| PUT | `/v1/user/:id` | Atualiza usuário | Sim |
+| DELETE | `/v1/user/:id` | Remove usuário | Sim |
+
+### Categorias
+
+| Método | Endpoint | Descrição | Autenticado |
+|--------|----------|-----------|-------------|
+| GET | `/v1/category/search` | Lista categorias com paginação | Não |
+| GET | `/v1/category/:id` | Busca categoria por ID | Não |
+| POST | `/v1/category` | Cria nova categoria | Sim |
+| PUT | `/v1/category/:id` | Atualiza categoria | Sim |
+| DELETE | `/v1/category/:id` | Remove categoria | Sim |
+
+### Produtos
+
+| Método | Endpoint | Descrição | Autenticado |
+|--------|----------|-----------|-------------|
+| GET | `/v1/product/search` | Lista produtos com paginação | Não |
+| GET | `/v1/product/:id` | Busca produto por ID | Não |
+| POST | `/v1/product` | Cria novo produto | Sim |
+| PUT | `/v1/product/:id` | Atualiza produto | Sim |
+| DELETE | `/v1/product/:id` | Remove produto | Sim |
 
 ---
 
-## 🧪 Testes
-Execute a suíte de testes unitários e de integração:
+## Autenticação
+
+A API utiliza autenticação Bearer Token (JWT). Para endpoints protegidos, inclua o token no header:
+
+```
+Authorization: Bearer <seu_token_jwt>
+```
+
+### Obter Token
+
+Envie uma requisição POST para `/v1/user/token` com as credenciais:
+
+```json
+{
+  "email": "usuario@exemplo.com",
+  "password": "sua_senha"
+}
+```
+
+---
+
+## Esquemas
+
+### UserTokenRequest
+
+```json
+{
+  "email": "string",
+  "password": "string"
+}
+```
+
+### UserCreate
+
+```json
+{
+  "name": "string",
+  "email": "string",
+  "password": "string",
+  "confirmPassword": "string"
+}
+```
+
+### UserUpdate
+
+```json
+{
+  "name": "string",
+  "email": "string"
+}
+```
+
+### CategoryCreate
+
+```json
+{
+  "name": "string"
+}
+```
+
+### CategoryUpdate
+
+```json
+{
+  "name": "string"
+}
+```
+
+### ProductCreate
+
+```json
+{
+  "name": "string",
+  "description": "string",
+  "price": "number",
+  "stock": "number",
+  "categoryId": "number"
+}
+```
+
+### ProductUpdate
+
+```json
+{
+  "name": "string",
+  "description": "string",
+  "price": "number",
+  "stock": "number",
+  "categoryId": "number"
+}
+```
+
+---
+
+## Testes
+
+Execute a suite de testes:
+
 ```bash
 npm test
 ```
 
----
-
-## 🔒 Segurança
-- Autenticação JWT com expiração.
-- Senhas protegidas com Argon2 + Pepper.
-- Transações SQL para integridade de dados.
-- Validação e sanitização de entradas.
+Os testes cobrem:
+- Validação de entrada
+- Autenticação e autorização
+- CRUD de recursos
+- Casos de erro
 
 ---
 
-## 📝 Licença
-Projeto final do programa **Geração Tech - Back-end**.
+## Segurança
+
+- **Autenticação JWT**: Tokens com tempo de expiração configurável
+- **Hash de Senhas**: Algoritmo Argon2 com pepper para proteção adicional
+- **Transações SQL**: Garantia de integridade referencial
+- **Validação de Entrada**: Sanitização e validação de todos os dados recebidos
+- **Endpoints Protegidos**: operações de escrita requerem autenticação
+
+---
+
+## Estrutura do Projeto
+
+```
+src/
+├── config/          # Configurações (DB, password)
+├── controllers/     # Controladores das rotas
+├── docs/           # Documentação Swagger
+├── middlewares/     # Middlewares (autenticação)
+├── models/          # Modelos Sequelize
+├── routes/          # Definição de rotas
+├── services/        # Lógica de negócio
+├── scripts/         # Scripts utilitários
+├── app.js          # Configuração do Express
+└── server.js       # Inicialização do servidor
+```
+
+---
+
+## Licença
+
+Projeto final do programa **Geração Tech - Back-end**.

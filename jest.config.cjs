@@ -3,8 +3,8 @@ module.exports = {
     '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
   },
   transformIgnorePatterns: [
-    
     '/node_modules/(?!(@faker-js/faker)/)',
   ],
   testEnvironment: 'node',
+  testTimeout: 30000,
 };
