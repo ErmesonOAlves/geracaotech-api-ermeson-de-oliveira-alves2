@@ -307,6 +307,17 @@ src/
 
 ---
 
+## Deploy
+
+A aplicação está atualmente hospedada e disponível para uso sem necessidade de baixar o código:
+
+- **Frontend (GitHub Pages)**: https://ermesonoalves.github.io/geracaotech-api-ermeson-de-oliveira-alves2/frontend.html
+- **Backend API (Render)**: https://geracaotech-api-ermeson-de-oliveira.onrender.com
+
+O frontend no GitHub Pages está configurado para conectar-se à API hospedada no Render, permitindo o uso completo da aplicação diretamente pelo navegador.
+
+---
+
 ## Licença
 
 Projeto final do programa **Geração Tech - Back-end**.
