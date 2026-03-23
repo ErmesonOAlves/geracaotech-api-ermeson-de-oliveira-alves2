@@ -77,7 +77,7 @@ Através do Swagger você pode:
 
 ```bash
 # Clonar o repositório
-git clone <url-do-repositorio>
+git clone https://github.com/ErmesonOAlves/geracaotech-api-ermeson-de-oliveira-alves2
 
 # Instalar dependências
 npm install
