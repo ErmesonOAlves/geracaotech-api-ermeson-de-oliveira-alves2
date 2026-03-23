@@ -31,7 +31,7 @@ API RESTful para gerenciamento de plataforma de e-commerce com gerenciamento com
 - **Autenticação JWT**: Sistema de autenticação seguro com tokens de acesso
 - **Documentação Interativa**: Swagger UI para exploração e teste dos endpoints
 - **Testes Automatizados**: Suite de testes unitários e de integração com Jest
-- **Banco de Dados**: MySQL com ORM Sequelize e transações para integridade de dados
+- **Banco de Dados**: PostgreSQL (Neon) com ORM Sequelize e transações para integridade de dados
 
 ---
 
@@ -41,7 +41,7 @@ API RESTful para gerenciamento de plataforma de e-commerce com gerenciamento com
 |-----------|------------|
 | Runtime | Node.js |
 | Framework | Express.js |
-| Banco de Dados | MySQL |
+| Banco de Dados | PostgreSQL (Neon) |
 | ORM | Sequelize |
 | Autenticação | JWT (JSON Web Tokens) |
 | Hash de Senhas | Argon2 |
@@ -68,7 +68,7 @@ Através do Swagger você pode:
 ## Pré-requisitos
 
 - Node.js (v18+)
-- MySQL (v8.0+)
+- PostgreSQL (via Neon)
 - npm ou yarn
 
 ---
