@@ -320,4 +320,4 @@ O frontend no GitHub Pages está configurado para conectar-se à API hospedada n
 
 ## Licença
 
-Projeto final do programa **Geração Tech - Back-end**.
+Projeto final do curso **Geração Tech - Desenvolvedor Web Full Stack **.
