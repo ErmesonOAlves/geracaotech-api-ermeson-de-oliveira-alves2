@@ -177,7 +177,20 @@ A API utiliza autenticação Bearer Token (JWT). Para endpoints protegidos, incl
 Authorization: Bearer <seu_token_jwt>
 ```
 
-### Obter Token
+### Obtenção de Token
+
+#### Usuário de Teste
+
+Para testes, você pode usar o seguinte usuário:
+
+```json
+{
+  "email": "ermesonoliveira2000@gmail.com",
+  "password": "123123123"
+}
+```
+
+#### Gerar Token
 
 Envie uma requisição POST para `/v1/user/token` com as credenciais:
 
