@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import jwt from 'jsonwebtoken'
 import User from '../models/User.js'
+import rateLimit from 'express-rate-limit'
 export const authenticationMiddleware = (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
@@ -30,11 +31,7 @@ export const authorizationMiddleware =async (req,res,next)=>{
         const requestedId = parseInt(req.params.id);
         const userId = req.user.id;
         const userToUpdate = await User.findByPk(requestedId)
-        if(!userToUpdate){
-            return res.status(404).json({
-                message:'User not found'
-            })
-        }
+        if(!userToUpdate)
         if(userId !== requestedId){
             return res.status(403).json({
                 message:'Access denied you can only update your own profile'
@@ -47,3 +44,11 @@ export const authorizationMiddleware =async (req,res,next)=>{
         })
     }
 }
+
+
+
+export const loginLimiter = rateLimit({
+    windowMs:15*60*1000,
+    max:5,
+    message: {message:'Too many requests from this IP, please try again later'}
+})
