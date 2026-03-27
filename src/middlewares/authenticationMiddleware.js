@@ -31,7 +31,11 @@ export const authorizationMiddleware =async (req,res,next)=>{
         const requestedId = parseInt(req.params.id);
         const userId = req.user.id;
         const userToUpdate = await User.findByPk(requestedId)
-        if(!userToUpdate)
+        if(!userToUpdate){
+            return res.status(404).json({
+                message:'User not found'
+            })
+        }
         if(userId !== requestedId){
             return res.status(403).json({
                 message:'Access denied you can only update your own profile'

@@ -101,6 +101,14 @@ export const create = async (productData) => {
     const t = await sequelize.transaction();
     try {
         const { enabled, name, slug, stock, description, price, price_with_discount, category_ids, images, options } = productData;
+        if(price<0||price_with_discount<0){
+            await t.rollback();
+            return {
+                status: 400,
+                body: { message: "Price must be positive" }
+            }
+        }
+
         const product = await Product.create({
             enabled,
             name,
@@ -110,7 +118,7 @@ export const create = async (productData) => {
             price,
             price_with_discount
         }, { transaction: t });
-
+        
         if (category_ids?.length > 0) {
             const existingCategories = await Category.findAll({
                 where: { id: { [Op.in]: category_ids } },
@@ -236,7 +244,13 @@ export const update = async (id, productData) => {
             await t.rollback();
             return { status: 404, body: { message: "Product not found" } }
         }
-
+        if(price<0||price_with_discount<0){
+            await t.rollback();
+            return {
+                status: 400,
+                body: { message: "Price must be positive" }
+            }
+        }
         await product.update({
             enabled,
             name,

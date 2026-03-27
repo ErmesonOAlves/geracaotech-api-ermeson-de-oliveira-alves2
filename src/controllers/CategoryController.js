@@ -44,7 +44,7 @@ export const update = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, slug, use_in_menu } = req.body;
-    if(!name || !slug) return res.status(404).json({message:"name and slug are required"})
+    if(!name || !slug) return res.status(400).json({message:"name and slug are required"})
     
     const { status, body } = await CategoryService.update(id, { name, slug, use_in_menu })
         return res.status(status).json(body)

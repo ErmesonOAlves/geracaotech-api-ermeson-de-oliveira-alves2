@@ -3,7 +3,7 @@ import sequelize from '../config/connection.js';
 
 
 export const create = async (req, res) => {
-    const t = await sequelize.transaction();
+    
 
     try {
         const {
@@ -16,12 +16,13 @@ export const create = async (req, res) => {
             });
         }
         const {status,body} = await ProductService.create(req.body)
+        
         return res.status(status).json(body)
 
         
 
     } catch (error) {
-        await t.rollback();
+        
         return res.status(400).json({
             message: "Failed to create product",
             error: error.message
@@ -64,7 +65,7 @@ export const update = async (req, res) => {
             message: "All fields are required (name, slug, price, price_with_discount)"
         });
     }
-     const t = await sequelize.transaction();
+     
     try {
         const { id } = req.params;
         if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
