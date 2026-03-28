@@ -97,3 +97,27 @@ test('Should fail when trying to delete a non-existent product', async () => {
 })
 
 
+test('Should reject product with negative price',async()=>{
+    const product = {
+        name: 'Produto teste',
+        slug: 'produto-teste',
+        price: -4000.00,
+        price_with_discount: 50
+    }
+   const res = await authenticatedRequest('post',`/v1/product`)
+   .send(product)
+   expect(res.status).toBe(400)
+   expect(res.body.message).toContain('positive')
+})
+test('Should reject product with negative discount price',async()=>{
+    const product = {
+        name: 'Produto teste',
+        slug: 'produto-teste',
+        price: 4000.00,
+        price_with_discount: -50
+    }
+   const res = await authenticatedRequest('post',`/v1/product`)
+   .send(product)
+   expect(res.status).toBe(400)
+   expect(res.body.message).toContain('positive')
+})

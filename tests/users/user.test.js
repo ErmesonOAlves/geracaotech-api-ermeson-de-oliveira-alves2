@@ -154,7 +154,10 @@ test('Should delete a user', async () => {
     })
     expect(createUser.status).toBe(201);
     const tempId = createUser.body.id;
-    const res = await authenticatedRequest('delete', `/v1/user/${tempId}`)
+    const userToken = await getAuthToken(uniqueEmail, '123456789')
+    const res = await request(app).
+    delete(`/v1/user/${tempId}`)
+    .set('Authorization',`Bearer ${userToken}`)
     expect(res.status).toBe(204)
     const checkDeletedUserNotExists = await authenticatedRequest('get', `/v1/user/${tempId}`)
     expect(checkDeletedUserNotExists.status).toBe(404)
@@ -164,4 +167,64 @@ test('Should fail when deleting a non-existent user', async () => {
     const res = await authenticatedRequest('delete', `/v1/user/${id}`)
     expect(res.status).toBe(404)
     expect(res.body.message).toContain('not found')
+})
+describe('CRUD FLOW - User',()=>{
+    let tempUserId;
+    const tempEmail = faker.internet.email()
+    test('Create -> Read -> Update -> Delete',async()=>{
+        const createRes = await request(app).post('/v1/user').send({
+            firstname:"Garapa",
+            surname:"Test",
+            email:tempEmail,
+            password:"123123123",
+            confirmpassword:"123123123"
+        });
+        const createResToken = await getAuthToken(tempEmail,'123123123')
+        expect(createRes.status).toBe(201);
+        tempUserId = createRes.body.id;
+        // Read
+        const readRes = await request(app).get(`/v1/user/${tempUserId}`)
+        expect(readRes.status).toBe(200);
+        expect(readRes.body.firstname).toBe("Garapa")
+        expect(readRes.body.surname).toBe("Test")
+        //update
+        const updateRes = await request(app).put(`/v1/user/${tempUserId}`)
+        .set('Authorization',`Bearer ${createResToken}`)
+        .send({firstname:'updated'});
+        
+        expect(updateRes.status).toBe(204)
+        const verify = await request(app).get(`/v1/user/${tempUserId}`)
+        expect(verify.body.firstname).toBe('updated')
+        //delete
+        const deleteRest = await request(app)
+        .delete(`/v1/user/${tempUserId}`)
+        .set('Authorization',`Bearer ${createResToken}`)
+        
+        expect(deleteRest.status).toBe(204)
+    })
+})
+describe('Authorization tests', ()=>{
+    test('Should return 403 when user A tries to update user',async()=>{
+        const userA = await request(app).post('/v1/user').send({
+            firstname:'UserA',
+            surname:'TestA',
+            email:faker.internet.email(),
+            password:'123123123',
+            confirmpassword:'123123123'
+        })
+        const userB = await request(app).post('/v1/user').send({
+            firstname:'UserB',
+            surname:'TestB',
+            email:faker.internet.email(),
+            password:'123123123',
+            confirmpassword:'123123123'
+        })
+
+        const tokenUserA = await getAuthToken(userA.body.email,'123123123')
+        const tokenUserB = await getAuthToken(userA.body.email,'123123123')
+        const res = await request(app).put(`/v1/user/${userB.body.id}`)
+        .set('Authorization',`Bearer ${tokenUserA}`)
+        .send({firstname:'hacked'})
+        expect(res.status).toBe(403)
+    })
 })
