@@ -221,7 +221,7 @@ describe('Authorization tests', ()=>{
         })
 
         const tokenUserA = await getAuthToken(userA.body.email,'123123123')
-        const tokenUserB = await getAuthToken(userA.body.email,'123123123')
+        const tokenUserB = await getAuthToken(userB.body.email,'123123123')
         const res = await request(app).put(`/v1/user/${userB.body.id}`)
         .set('Authorization',`Bearer ${tokenUserA}`)
         .send({firstname:'hacked'})
